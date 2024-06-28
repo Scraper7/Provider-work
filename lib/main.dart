@@ -3,53 +3,49 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-void main() => runApp(AppProvider());
+void main() => runApp(SwitchColorApp());
 
-class AppProvider extends StatelessWidget {
+class SwitchColorApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Provider',
+      title: 'Provider Work',
       home: MultiProvider(
         providers: [
-          // Изменено имя класса с StateControll на StateController
-          ChangeNotifierProvider<StateController>.value(
-              value: StateController()),
+          ChangeNotifierProvider<StateController>(
+              create: (_) => StateController())
         ],
-        child: HomeProvider(),
+        child: HomeScreen(),
       ),
     );
   }
 }
 
-// Изменено имя класса с StateControll на StateController
 class StateController extends ChangeNotifier {
-  // Изменено имя переменной _color на _isColorChanged
-  bool _isColorChanged = false;
+  bool _ifColorChanged = false;
 
-  // Изменено имя геттера с colorValue на isColorChanged
-  bool get isColorChanged => _isColorChanged;
+  bool get ifColorChanger => _ifColorChanged;
 
-  // Изменено имя метода с changeColor на toggleColor
   void toggleColor() {
-    _isColorChanged = !_isColorChanged;
+    _ifColorChanged = !_ifColorChanged;
     notifyListeners();
   }
 }
 
-class HomeProvider extends StatelessWidget {
+class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Изменено имя класса с StateControll на StateController
     StateController _state = Provider.of<StateController>(context);
     final randomColor =
         Colors.primaries[Random().nextInt(Colors.primaries.length)];
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
-        // Изменен цвет при условии, чтобы цвет изменялся в зависимости от состояния
-        foregroundColor: _state.isColorChanged ? randomColor : Colors.white,
-        title: Text('HomeWork Provider'),
+        foregroundColor: _state.ifColorChanger ? randomColor : Colors.white,
+        title: Text(
+          'HomeWork Provider',
+          style: TextStyle(),
+        ),
         centerTitle: true,
       ),
       body: Center(
@@ -58,19 +54,15 @@ class HomeProvider extends StatelessWidget {
           children: [
             AnimatedContainer(
               duration: Duration(seconds: 1),
-              width: 200.0,
-              height: 200.0,
-              // Изменен цвет при условии, чтобы цвет изменялся в зависимости от состояния
-              color: _state.isColorChanged ? randomColor : Colors.grey,
+              width: 200,
+              height: 200,
+              color: _state.ifColorChanger ? randomColor : Colors.grey,
             ),
             Switch(
-              // Изменено имя переменной с colorValue на isColorChanged
-              value: _state.isColorChanged,
-              onChanged: (bool value) {
-                // Изменено имя метода с changeColor на toggleColor
-                _state.toggleColor();
-              },
-            ),
+                value: _state.ifColorChanger,
+                onChanged: (bool value) {
+                  _state.toggleColor();
+                })
           ],
         ),
       ),
